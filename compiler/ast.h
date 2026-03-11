@@ -1,21 +1,21 @@
 #pragma once
 #include <string>
-#include <vector>
 
 struct Node{
 
-};
-
-struct FunctionNode : Node{
-
-    std::string name;
-    std::vector<std::string> args;
+    virtual ~Node(){}
 
 };
 
 struct VariableNode : Node{
 
     std::string name;
+    std::string value;
+
+};
+
+struct PrintNode : Node{
+
     std::string value;
 
 };

@@ -9,5 +9,6 @@ add_executable(novac
 compiler/main.cpp
 compiler/lexer.cpp
 compiler/parser.cpp
+compiler/codegen.cpp
 
 )

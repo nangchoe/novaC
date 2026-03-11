@@ -3,6 +3,7 @@
 
 #include "lexer.h"
 #include "parser.h"
+#include "codegen.h"
 
 int main(int argc,char** argv){
 
@@ -29,7 +30,17 @@ int main(int argc,char** argv){
 
     auto ast = parser.parse(tokens);
 
-    std::cout<<"Tokens: "<<tokens.size()<<std::endl;
-    std::cout<<"AST nodes: "<<ast.size()<<std::endl;
+    Codegen gen;
 
+    std::string ccode = gen.generate(ast);
+
+    std::ofstream out("output.c");
+
+    out << ccode;
+
+    out.close();
+
+    system("gcc output.c -o output");
+
+    std::cout<<"Build success\n";
 }
