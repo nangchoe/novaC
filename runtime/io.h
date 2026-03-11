@@ -16,6 +16,7 @@ public:
         std::cout<<"Read GPIO "<<pin<<"\n";
 
         return 0;
+
     }
 
 };

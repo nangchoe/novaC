@@ -54,3 +54,15 @@ struct FunctionNode : Node{
     std::vector<std::string> args;
 
 };
+
+struct TimerNode : Node{
+
+    std::string value;
+
+};
+
+struct InterruptNode : Node{
+
+    std::string pin;
+
+};

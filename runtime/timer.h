@@ -1,21 +1,17 @@
 #pragma once
-#include <iostream>
+#include <thread>
+#include <chrono>
 
-class IO{
+class Timer{
 
 public:
 
-    static void out(int pin,int value){
+    static void delay(int ms){
 
-        std::cout<<"GPIO "<<pin<<" -> "<<value<<"\n";
+        std::this_thread::sleep_for(
+            std::chrono::milliseconds(ms)
+        );
 
-    }
-
-    static int scan(int pin){
-
-        std::cout<<"Read GPIO "<<pin<<"\n";
-
-        return 0;
     }
 
 };

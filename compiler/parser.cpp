@@ -1,100 +1,201 @@
 #include "parser.h"
 
-std::vector<Node *> Parser::parse(std::vector<Token> tokens)
+Token Parser::peek()
 {
 
-    std::vector<Node *> nodes;
+    if (pos < tokens.size())
+        return tokens[pos];
 
-    for (int i = 0; i < tokens.size(); i++)
+    return Token();
+}
+
+Token Parser::advance()
+{
+
+    if (pos < tokens.size())
+        return tokens[pos++];
+
+    return Token();
+}
+
+bool Parser::match(std::string v)
+{
+
+    if (peek().value == v)
     {
+        advance();
+        return true;
+    }
 
-        if (tokens[i].type == TOKEN_LET)
-        {
+    return false;
+}
 
-            VariableNode *v = new VariableNode;
+std::vector<Node*> Parser::parse(std::vector<Token> t){
 
-            v->name = tokens[i + 1].value;
+    tokens = t;
+    pos = 0;
 
-            std::string expr = tokens[i + 3].value;
+    std::vector<Node*> nodes;
 
-            if (i + 5 < tokens.size())
-            {
+    while(pos < tokens.size()){
 
-                if (tokens[i + 4].type == TOKEN_PLUS ||
-                    tokens[i + 4].type == TOKEN_MINUS ||
-                    tokens[i + 4].type == TOKEN_STAR ||
-                    tokens[i + 4].type == TOKEN_SLASH)
-                {
+        int start = pos;
 
-                    expr += " " + tokens[i + 4].value + " " + tokens[i + 5].value;
-                }
-            }
+        Node* stmt = parseStatement();
 
-            v->value = expr;
-
-            nodes.push_back(v);
+        if(stmt){
+            nodes.push_back(stmt);
         }
 
-        if (tokens[i].type == TOKEN_IDENTIFIER &&
-            tokens[i].value == "io.print")
-        {
-
-            PrintNode *p = new PrintNode;
-
-            p->value = tokens[i + 2].value;
-
-            nodes.push_back(p);
+        if(pos == start){
+            advance();
         }
 
-        // io.out(pin,value)
-
-        if (tokens[i].type == TOKEN_IDENTIFIER &&
-            tokens[i].value == "io.out")
-        {
-
-            IoOutNode *n = new IoOutNode;
-
-            n->pin = tokens[i + 2].value;
-            n->value = tokens[i + 4].value;
-
-            nodes.push_back(n);
-        }
-
-        // server.start()
-
-        if (tokens[i].type == TOKEN_IDENTIFIER &&
-            tokens[i].value == "server.start")
-        {
-
-            ServerStartNode *n = new ServerStartNode;
-
-            nodes.push_back(n);
-        }
-
-        // if parser
-
-        if (tokens[i].value == "if")
-        {
-
-            IfNode *n = new IfNode;
-
-            n->left = tokens[i + 1].value;
-            n->op = tokens[i + 2].value;
-            n->right = tokens[i + 3].value;
-
-            nodes.push_back(n);
-        }
-
-        //loop parser
-
-        if (tokens[i].value == "loop")
-        {
-
-            LoopNode *n = new LoopNode;
-
-            nodes.push_back(n);
-        }
     }
 
     return nodes;
+}
+
+Node *Parser::parseStatement()
+{
+
+    Token t = peek();
+
+    if (t.value == "let")
+        return parseVariable();
+
+    if (t.value == "if")
+        return parseIf();
+
+    if (t.value == "loop")
+        return parseLoop();
+
+    if (t.value == "io.print")
+        return parseCall();
+
+    if (t.value == "io.out")
+        return parseCall();
+
+    if (t.value == "timer.delay")
+        return parseCall();
+
+    if (t.value == "interrupt.attach")
+        return parseCall();
+
+    if (t.value == "server.start")
+        return parseCall();
+
+    return nullptr;
+}
+
+Node *Parser::parseVariable()
+{
+
+    advance(); // let
+
+    VariableNode *v = new VariableNode;
+
+    v->name = advance().value;
+
+    advance(); // =
+
+    v->value = advance().value;
+
+    return v;
+}
+
+Node *Parser::parseIf()
+{
+
+    advance(); // if
+
+    IfNode *n = new IfNode;
+
+    n->left = advance().value;
+    n->op = advance().value;
+    n->right = advance().value;
+
+    return n;
+}
+
+Node *Parser::parseLoop()
+{
+
+    advance(); // loop
+
+    LoopNode *l = new LoopNode;
+
+    return l;
+}
+
+Node *Parser::parseCall()
+{
+
+    Token t = advance();
+
+    if (t.value == "io.print")
+    {
+
+        PrintNode *p = new PrintNode;
+
+        advance(); // (
+        p->value = advance().value;
+        advance(); // )
+
+        return p;
+    }
+
+    if (t.value == "server.start")
+    {
+
+        ServerStartNode *s = new ServerStartNode;
+
+        advance(); // (
+        advance(); // port
+        advance(); // )
+
+        return s;
+    }
+
+    if (t.value == "io.out")
+    {
+
+        IoOutNode *n = new IoOutNode;
+
+        advance(); // (
+        n->pin = advance().value;
+
+        advance(); // ,
+        n->value = advance().value;
+
+        advance(); // )
+
+        return n;
+    }
+
+    if (t.value == "timer.delay")
+    {
+
+        TimerNode *n = new TimerNode;
+
+        advance(); // (
+        n->value = advance().value;
+        advance(); // )
+
+        return n;
+    }
+
+    if (t.value == "interrupt.attach")
+    {
+
+        InterruptNode *n = new InterruptNode;
+
+        advance(); // (
+        n->pin = advance().value;
+        advance(); // )
+
+        return n;
+    }
+
+    return nullptr;
 }
