@@ -3,15 +3,7 @@
 #include <vector>
 
 struct Node{
-
     virtual ~Node(){}
-
-};
-
-struct ProgramNode : Node{
-
-    std::vector<Node*> statements;
-
 };
 
 struct VariableNode : Node{
@@ -27,17 +19,9 @@ struct PrintNode : Node{
 
 };
 
-struct IfNode : Node{
+struct StringNode : Node{
 
-    std::string condition;
-
-};
-
-struct BinaryExprNode : Node{
-
-    std::string left;
-    std::string op;
-    std::string right;
+    std::string value;
 
 };
 
@@ -49,13 +33,6 @@ struct IoOutNode : Node{
 };
 
 struct ServerStartNode : Node{
-
-};
-
-struct FunctionNode : Node{
-
-    std::string name;
-    std::vector<std::string> args;
 
 };
 
@@ -71,8 +48,9 @@ struct LoopNode : Node{
 
 };
 
-struct StringNode : Node{
+struct FunctionNode : Node{
 
-    std::string value;
+    std::string name;
+    std::vector<std::string> args;
 
 };

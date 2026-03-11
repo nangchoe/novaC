@@ -30,11 +30,14 @@ bool build(std::string file){
 
     std::string ccode = gen.generate(ast);
 
-    std::ofstream out("output.c");
+    // std::ofstream out("output.c");
+    std::ofstream out("output.cpp");
     out << ccode;
     out.close();
 
-    system("gcc output.c -o output.exe");
+    // system("gcc output.c -o output.exe");
+    system("g++ output.cpp -lws2_32 -o output.exe");
+    // std::ofstream out("output.cpp");
 
     std::cout<<"Build success\n";
 

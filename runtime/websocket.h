@@ -11,4 +11,10 @@ public:
 
     }
 
+    static void broadcast(std::string msg){
+
+        std::cout<<"WebSocket broadcast: "<<msg<<"\n";
+
+    }
+
 };
