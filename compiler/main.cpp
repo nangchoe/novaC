@@ -6,22 +6,28 @@
 #include "parser.h"
 #include "codegen.h"
 
-bool build(std::string file){
+bool build(std::string file)
+{
 
     std::ifstream f(file);
 
-    if(!f){
-        std::cout<<"Cannot open file\n";
+    if (!f)
+    {
+        std::cout << "Cannot open file\n";
         return false;
     }
 
     std::string code(
         (std::istreambuf_iterator<char>(f)),
-        std::istreambuf_iterator<char>()
-    );
+        std::istreambuf_iterator<char>());
 
     Lexer lexer;
     auto tokens = lexer.tokenize(code);
+
+    // for (auto &t : tokens)
+    // {
+    //     std::cout << "TOKEN: " << t.value << "\n";
+    // }
 
     Parser parser;
     auto ast = parser.parse(tokens);
@@ -39,30 +45,34 @@ bool build(std::string file){
     system("g++ output.cpp -lws2_32 -o output.exe");
     // std::ofstream out("output.cpp");
 
-    std::cout<<"Build success\n";
+    std::cout << "Build success\n";
 
     return true;
 }
 
-void run(std::string file){
+void run(std::string file)
+{
 
-    if(build(file)){
+    if (build(file))
+    {
         system("output.exe");
     }
-
 }
 
-void help(){
+void help()
+{
 
-    std::cout<<"NovaC CLI\n";
-    std::cout<<"Commands:\n";
-    std::cout<<" novac build file.nc\n";
-    std::cout<<" novac run file.nc\n";
+    std::cout << "NovaC CLI\n";
+    std::cout << "Commands:\n";
+    std::cout << " novac build file.nc\n";
+    std::cout << " novac run file.nc\n";
 }
 
-int main(int argc,char** argv){
+int main(int argc, char **argv)
+{
 
-    if(argc < 3){
+    if (argc < 3)
+    {
 
         help();
         return 0;
@@ -70,10 +80,9 @@ int main(int argc,char** argv){
 
     std::string cmd = argv[1];
 
-    if(cmd == "build")
+    if (cmd == "build")
         build(argv[2]);
 
-    else if(cmd == "run")
+    else if (cmd == "run")
         run(argv[2]);
-
 }

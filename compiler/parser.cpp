@@ -30,27 +30,30 @@ bool Parser::match(std::string v)
     return false;
 }
 
-std::vector<Node*> Parser::parse(std::vector<Token> t){
+std::vector<Node *> Parser::parse(std::vector<Token> t)
+{
 
     tokens = t;
     pos = 0;
 
-    std::vector<Node*> nodes;
+    std::vector<Node *> nodes;
 
-    while(pos < tokens.size()){
+    while (pos < tokens.size())
+    {
 
         int start = pos;
 
-        Node* stmt = parseStatement();
+        Node *stmt = parseStatement();
 
-        if(stmt){
+        if (stmt)
+        {
             nodes.push_back(stmt);
         }
 
-        if(pos == start){
+        if (pos == start)
+        {
             advance();
         }
-
     }
 
     return nodes;
@@ -83,6 +86,12 @@ Node *Parser::parseStatement()
         return parseCall();
 
     if (t.value == "server.start")
+        return parseCall();
+
+    if (t.value == "server.get")
+        return parseCall();
+
+    if (t.value == "server.post")
         return parseCall();
 
     return nullptr;
@@ -192,6 +201,34 @@ Node *Parser::parseCall()
 
         advance(); // (
         n->pin = advance().value;
+        advance(); // )
+
+        return n;
+    }
+
+    if (t.value == "server.get")
+    {
+
+        ServerGetNode *n = new ServerGetNode;
+
+        advance(); // (
+
+        n->route = advance().value; // STRING
+
+        advance(); // )
+
+        return n;
+    }
+
+    if (t.value == "server.post")
+    {
+
+        ServerPostNode *n = new ServerPostNode;
+
+        advance(); // (
+
+        n->route = advance().value;
+
         advance(); // )
 
         return n;

@@ -66,3 +66,15 @@ struct InterruptNode : Node{
     std::string pin;
 
 };
+
+struct ServerGetNode : Node{
+
+    std::string route;
+
+};
+
+struct ServerPostNode : Node{
+
+    std::string route;
+
+};

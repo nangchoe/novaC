@@ -8,10 +8,11 @@ std::string Codegen::generate(std::vector<Node *> nodes)
 
     out << "#include <stdio.h>\n";
     out << "#include \"runtime/server.h\"\n\n";
-    out << "int main(){\n";
     out << "#include \"runtime/io.h\"\n";
     out << "#include \"runtime/timer.h\"\n";
     out << "#include \"runtime/interrupt.h\"\n";
+
+     out << "int main(){\n";
 
     for (auto node : nodes)
     {
@@ -54,6 +55,22 @@ std::string Codegen::generate(std::vector<Node *> nodes)
             out << "IO::out("
                 << io->pin << ","
                 << io->value << ");\n";
+        }
+
+        if (auto g = dynamic_cast<ServerGetNode *>(node))
+        {
+
+            out << "Server::get(\""
+                << g->route
+                << "\");\n";
+        }
+
+        if (auto p = dynamic_cast<ServerPostNode *>(node))
+        {
+
+            out << "Server::post(\""
+                << p->route
+                << "\");\n";
         }
     }
 
