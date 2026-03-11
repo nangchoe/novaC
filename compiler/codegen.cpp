@@ -12,14 +12,16 @@ std::string Codegen::generate(std::vector<Node *> nodes)
     out << "#include \"runtime/timer.h\"\n";
     out << "#include \"runtime/interrupt.h\"\n";
 
-     out << "int main(){\n";
+    out << "int main(){\n";
 
     for (auto node : nodes)
     {
 
         if (auto s = dynamic_cast<ServerStartNode *>(node))
         {
-            out << "Server::start(8080);\n";
+            out << "Server::start("
+                << s->port
+                << ");\n";
         }
 
         if (auto p = dynamic_cast<PrintNode *>(node))

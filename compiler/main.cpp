@@ -28,6 +28,7 @@ bool build(std::string file)
     // {
     //     std::cout << "TOKEN: " << t.value << "\n";
     // }
+    
 
     Parser parser;
     auto ast = parser.parse(tokens);

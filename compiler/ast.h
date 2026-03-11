@@ -34,6 +34,8 @@ struct IoOutNode : Node{
 
 struct ServerStartNode : Node{
 
+    std::string port;
+
 };
 
 struct IfNode : Node{

@@ -160,7 +160,11 @@ Node *Parser::parseCall()
         ServerStartNode *s = new ServerStartNode;
 
         advance(); // (
-        advance(); // port
+
+        Token portToken = advance();
+
+        s->port = portToken.value;
+
         advance(); // )
 
         return s;

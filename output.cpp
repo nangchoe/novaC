@@ -7,6 +7,6 @@
 int main(){
 Server::get("/sensor");
 Server::post("/led");
-Server::start(8080);
+Server::start(3000);
 return 0;
 }
