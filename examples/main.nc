@@ -1,10 +1,6 @@
 fn main(){
 
-    let x = 10
-    let y = 20
-
-    let z = x + y
-
-    io.print(z)
-
+    io.out(13,1)
+    io.print(100)
+    server.start()
 }

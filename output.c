@@ -1,8 +1,7 @@
 #include <stdio.h>
 int main(){
-int x = 10;
-int y = 20;
-int z = x + y;
-printf("%d\n",z);
+printf("GPIO %d -> %d\n",13,1);
+printf("%d\n",100);
+printf("NovaC Web Server started\n");
 return 0;
 }

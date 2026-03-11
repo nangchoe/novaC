@@ -40,3 +40,14 @@ struct BinaryExprNode : Node{
     std::string right;
 
 };
+
+struct IoOutNode : Node{
+
+    std::string pin;
+    std::string value;
+
+};
+
+struct ServerStartNode : Node{
+
+};

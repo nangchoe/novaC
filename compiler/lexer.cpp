@@ -64,7 +64,9 @@ std::vector<Token> Lexer::tokenize(std::string code){
         if(c=='*'){ tokens.push_back({TOKEN_STAR,"*"}); i++; continue; }
         if(c=='/'){ tokens.push_back({TOKEN_SLASH,"/"}); i++; continue; }
 
-        if(c=='='){ tokens.push_back({TOKEN_EQUAL,"="}); i++; continue; }
+        // if(c=='='){ tokens.push_back({TOKEN_EQUAL,"="}); i++; continue; }
+
+        if(c==','){ tokens.push_back({TOKEN_EQUAL,"="}); i++; continue; }
 
         i++;
     }
