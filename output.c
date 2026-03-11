@@ -1,8 +1,8 @@
 #include <stdio.h>
-int main(){
-int x = 10;
-if(x > 5){
-printf("%d\n",x);
+int add(int a, int b){
+return a + b;
 }
-return 0;
+int main(){
+int r = add(10,20);
+printf("%d\n",r);
 }

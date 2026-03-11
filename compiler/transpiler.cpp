@@ -3,15 +3,38 @@
 
 #include <sstream>
 #include <string>
+#include <vector>
+
+std::string buildArgs(std::string args){
+
+    std::stringstream ss(args);
+    std::string token;
+
+    std::stringstream result;
+
+    bool first = true;
+
+    while(std::getline(ss,token,',')){
+
+        token = trim(token);
+
+        if(!first)
+            result << ", ";
+
+        result << "int " << token;
+
+        first = false;
+    }
+
+    return result.str();
+}
 
 std::string Transpiler::transpile(std::string code){
 
-    std::stringstream output;
+    std::stringstream functions;
+    std::stringstream mainCode;
 
-    int blockDepth = 0;
-
-    output << "#include <stdio.h>\n";
-    output << "int main(){\n";
+    bool insideFunction = false;
 
     std::stringstream ss(code);
     std::string line;
@@ -22,11 +45,63 @@ std::string Transpiler::transpile(std::string code){
 
         if(line.empty()) continue;
 
-        if(line.find("fn main") != std::string::npos) continue;
+        // FUNCTION
+        if(line.find("fn ") == 0 && line.find("main") == std::string::npos){
 
-        if(line == "{" || line == "}") continue;
+            auto nameStart = 3;
+            auto paren = line.find("(");
 
-        // let variable
+            std::string fname = line.substr(nameStart,paren-nameStart);
+
+            auto close = line.find(")");
+
+            std::string args = line.substr(paren+1,close-paren-1);
+
+            std::string cArgs = buildArgs(args);
+
+            functions << "int " << fname << "(" << cArgs << "){\n";
+
+            insideFunction = true;
+
+            continue;
+        }
+
+        // MAIN
+        if(line.find("fn main") != std::string::npos){
+
+            mainCode << "int main(){\n";
+
+            continue;
+        }
+
+        if(line == "{") continue;
+
+        if(line == "}"){
+
+            if(insideFunction){
+                functions << "}\n";
+                insideFunction = false;
+            }else{
+                mainCode << "}\n";
+            }
+
+            continue;
+        }
+
+        // RETURN
+        if(line.find("return") == 0){
+
+            std::string val = trim(line.substr(6));
+
+            if(insideFunction)
+                functions << "return " << val << ";\n";
+            else
+                mainCode << "return " << val << ";\n";
+
+            continue;
+        }
+
+        // VARIABLE
         if(line.find("let ") == 0){
 
             line = line.substr(4);
@@ -36,39 +111,12 @@ std::string Transpiler::transpile(std::string code){
             std::string name = trim(line.substr(0,eq));
             std::string value = trim(line.substr(eq+1));
 
-            output << "int " << name << " = " << value << ";\n";
+            mainCode << "int " << name << " = " << value << ";\n";
 
             continue;
         }
 
-        // if
-        if(line.find("if ") == 0){
-
-            std::string cond = line.substr(3);
-
-            auto brace = cond.find("{");
-
-            if(brace != std::string::npos)
-                cond = trim(cond.substr(0,brace));
-
-            output << "if(" << cond << "){\n";
-
-            blockDepth++;
-
-            continue;
-        }
-
-        // loop
-        if(line.find("loop") == 0){
-
-            output << "while(1){\n";
-
-            blockDepth++;
-
-            continue;
-        }
-
-        // print
+        // PRINT
         if(line.find("io.print") != std::string::npos){
 
             auto start = line.find("(");
@@ -76,29 +124,21 @@ std::string Transpiler::transpile(std::string code){
 
             std::string content = trim(line.substr(start+1,end-start-1));
 
-            // detect string
-            if(content.find("\"") != std::string::npos){
-
-                output << "printf(\"%s\\n\"," << content << ");\n";
-
-            } else {
-
-                output << "printf(\"%d\\n\"," << content << ");\n";
-
-            }
+            if(content.find("\"") != std::string::npos)
+                mainCode << "printf(\"%s\\n\"," << content << ");\n";
+            else
+                mainCode << "printf(\"%d\\n\"," << content << ");\n";
 
             continue;
         }
 
     }
 
-    while(blockDepth > 0){
-        output << "}\n";
-        blockDepth--;
-    }
+    std::stringstream final;
 
-    output << "return 0;\n";
-    output << "}\n";
+    final << "#include <stdio.h>\n";
+    final << functions.str();
+    final << mainCode.str();
 
-    return output.str();
+    return final.str();
 }
