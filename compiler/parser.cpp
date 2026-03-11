@@ -9,33 +9,22 @@ std::vector<Node*> Parser::parse(std::vector<Token> tokens){
         // let x = 10
         if(tokens[i].type == TOKEN_LET){
 
-            if(i + 3 < tokens.size()){
+            VariableNode* v = new VariableNode;
 
-                VariableNode* v = new VariableNode;
+            v->name = tokens[i+1].value;
+            v->value = tokens[i+3].value;
 
-                v->name  = tokens[i+1].value;
-                v->value = tokens[i+3].value;
-
-                nodes.push_back(v);
-            }
+            nodes.push_back(v);
         }
 
-        // io.print(x)  -> token dạng "io.print(x)"
-        if(tokens[i].value.find("io.print(") == 0){
+        // io.print(x)
+        if(tokens[i].value == "io.print"){
 
-            std::string token = tokens[i].value;
+            PrintNode* p = new PrintNode;
 
-            auto start = token.find("(");
-            auto end   = token.find(")");
+            p->value = tokens[i+2].value;
 
-            if(start != std::string::npos && end != std::string::npos){
-
-                PrintNode* p = new PrintNode;
-
-                p->value = token.substr(start+1, end-start-1);
-
-                nodes.push_back(p);
-            }
+            nodes.push_back(p);
         }
 
     }

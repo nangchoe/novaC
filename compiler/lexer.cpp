@@ -1,30 +1,117 @@
 #include "lexer.h"
-#include <sstream>
 #include <cctype>
 
 std::vector<Token> Lexer::tokenize(std::string code){
 
     std::vector<Token> tokens;
 
-    std::stringstream ss(code);
-    std::string word;
+    int i = 0;
 
-    while(ss >> word){
+    while(i < code.size()){
 
-        if(word == "fn")
-            tokens.push_back({TOKEN_FN,word});
+        char c = code[i];
 
-        else if(word == "let")
-            tokens.push_back({TOKEN_LET,word});
+        if(isspace(c)){
+            i++;
+            continue;
+        }
 
-        else if(word == "return")
-            tokens.push_back({TOKEN_RETURN,word});
+        if(isalpha(c)){
 
-        else if(isdigit(word[0]))
-            tokens.push_back({TOKEN_NUMBER,word});
+            std::string word;
 
-        else
-            tokens.push_back({TOKEN_IDENTIFIER,word});
+            while(i < code.size() &&
+                 (isalnum(code[i]) || code[i]=='.')){
+
+                word += code[i];
+                i++;
+            }
+
+            if(word == "fn")
+                tokens.push_back({TOKEN_FN,word});
+
+            else if(word == "let")
+                tokens.push_back({TOKEN_LET,word});
+
+            else if(word == "return")
+                tokens.push_back({TOKEN_RETURN,word});
+
+            else
+                tokens.push_back({TOKEN_IDENTIFIER,word});
+
+            continue;
+        }
+
+        if(isdigit(c)){
+
+            std::string num;
+
+            while(i < code.size() && isdigit(code[i])){
+
+                num += code[i];
+                i++;
+            }
+
+            tokens.push_back({TOKEN_NUMBER,num});
+
+            continue;
+        }
+
+        if(c == '('){
+            tokens.push_back({TOKEN_LPAREN,"("});
+            i++;
+            continue;
+        }
+
+        if(c == ')'){
+            tokens.push_back({TOKEN_RPAREN,")"});
+            i++;
+            continue;
+        }
+
+        if(c == '{'){
+            tokens.push_back({TOKEN_LBRACE,"{"});
+            i++;
+            continue;
+        }
+
+        if(c == '}'){
+            tokens.push_back({TOKEN_RBRACE,"}"});
+            i++;
+            continue;
+        }
+
+        if(c == '+'){
+            tokens.push_back({TOKEN_PLUS,"+"});
+            i++;
+            continue;
+        }
+
+        if(c == '-'){
+            tokens.push_back({TOKEN_MINUS,"-"});
+            i++;
+            continue;
+        }
+
+        if(c == '*'){
+            tokens.push_back({TOKEN_STAR,"*"});
+            i++;
+            continue;
+        }
+
+        if(c == '/'){
+            tokens.push_back({TOKEN_SLASH,"/"});
+            i++;
+            continue;
+        }
+
+        if(c == '='){
+            tokens.push_back({TOKEN_EQUAL,"="});
+            i++;
+            continue;
+        }
+
+        i++;
     }
 
     return tokens;
