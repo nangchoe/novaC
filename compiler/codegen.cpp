@@ -40,6 +40,22 @@ std::string Codegen::generate(std::vector<Node *> ast)
 
             out << "printf(\"NovaC Web Server started\\n\");\n";
         }
+
+        if (auto i = dynamic_cast<IfNode *>(node))
+        {
+
+            out << "if("
+                << i->left << " "
+                << i->op << " "
+                << i->right
+                << "){ }\n";
+        }
+
+        if (auto l = dynamic_cast<LoopNode *>(node))
+        {
+
+            out << "while(1){ }\n";
+        }
     }
 
     out << "return 0;\n";

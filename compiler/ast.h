@@ -51,3 +51,22 @@ struct IoOutNode : Node{
 struct ServerStartNode : Node{
 
 };
+
+struct FunctionNode : Node{
+
+    std::string name;
+    std::vector<std::string> args;
+
+};
+
+struct IfNode : Node{
+
+    std::string left;
+    std::string op;
+    std::string right;
+
+};
+
+struct LoopNode : Node{
+
+};

@@ -7,7 +7,7 @@ public:
 
     static void start(){
 
-        std::cout<<"NovaC Web Server running\n";
+        std::cout<<"NovaC Web Server started\n";
 
     }
 

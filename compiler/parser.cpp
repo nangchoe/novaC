@@ -70,6 +70,30 @@ std::vector<Node *> Parser::parse(std::vector<Token> tokens)
 
             nodes.push_back(n);
         }
+
+        // if parser
+
+        if (tokens[i].value == "if")
+        {
+
+            IfNode *n = new IfNode;
+
+            n->left = tokens[i + 1].value;
+            n->op = tokens[i + 2].value;
+            n->right = tokens[i + 3].value;
+
+            nodes.push_back(n);
+        }
+
+        //loop parser
+
+        if (tokens[i].value == "loop")
+        {
+
+            LoopNode *n = new LoopNode;
+
+            nodes.push_back(n);
+        }
     }
 
     return nodes;
