@@ -19,3 +19,9 @@ struct PrintNode : Node{
     std::string value;
 
 };
+
+struct IfNode : Node{
+
+    std::string condition;
+
+};

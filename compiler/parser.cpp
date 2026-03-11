@@ -12,6 +12,7 @@ std::vector<Node*> Parser::parse(std::vector<Token> tokens){
             VariableNode* v = new VariableNode;
 
             v->name = tokens[i+1].value;
+
             v->value = tokens[i+3].value;
 
             nodes.push_back(v);
@@ -25,6 +26,16 @@ std::vector<Node*> Parser::parse(std::vector<Token> tokens){
             p->value = tokens[i+2].value;
 
             nodes.push_back(p);
+        }
+
+        // if x > 10
+        if(tokens[i].value == "if"){
+
+            IfNode* n = new IfNode;
+
+            n->condition = tokens[i+1].value;
+
+            nodes.push_back(n);
         }
 
     }
