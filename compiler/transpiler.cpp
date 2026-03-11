@@ -5,28 +5,118 @@
 #include <string>
 #include <vector>
 
-std::string buildArgs(std::string args){
+struct Arg{
+
+    std::string name;
+    std::string def;
+};
+
+struct FunctionInfo{
+
+    std::string name;
+    std::vector<Arg> args;
+};
+
+std::vector<FunctionInfo> functionsList;
+
+std::vector<Arg> parseArgs(std::string args){
+
+    std::vector<Arg> result;
 
     std::stringstream ss(args);
     std::string token;
-
-    std::stringstream result;
-
-    bool first = true;
 
     while(std::getline(ss,token,',')){
 
         token = trim(token);
 
-        if(!first)
-            result << ", ";
+        Arg a;
 
-        result << "int " << token;
+        auto eq = token.find("=");
+
+        if(eq != std::string::npos){
+
+            a.name = trim(token.substr(0,eq));
+            a.def = trim(token.substr(eq+1));
+
+        }else{
+
+            a.name = token;
+            a.def = "";
+
+        }
+
+        result.push_back(a);
+    }
+
+    return result;
+}
+
+std::string buildArgs(std::vector<Arg> args){
+
+    std::stringstream out;
+
+    bool first = true;
+
+    for(auto &a:args){
+
+        if(!first)
+            out << ", ";
+
+        out << "int " << a.name;
 
         first = false;
     }
 
-    return result.str();
+    return out.str();
+}
+
+FunctionInfo* findFunction(std::string name){
+
+    for(auto &f:functionsList){
+
+        if(f.name == name)
+            return &f;
+    }
+
+    return nullptr;
+}
+
+std::string applyDefaultArgs(std::string name,std::string args){
+
+    FunctionInfo* f = findFunction(name);
+
+    if(!f) return name + "(" + args + ")";
+
+    std::vector<std::string> given;
+
+    std::stringstream ss(args);
+    std::string token;
+
+    while(std::getline(ss,token,',')){
+
+        given.push_back(trim(token));
+    }
+
+    std::stringstream finalArgs;
+
+    for(int i=0;i<f->args.size();i++){
+
+        if(i < given.size()){
+
+            finalArgs << given[i];
+
+        }else{
+
+            finalArgs << f->args[i].def;
+
+        }
+
+        if(i != f->args.size()-1)
+            finalArgs << ",";
+    }
+
+    return name + "(" + finalArgs.str() + ")";
 }
 
 std::string Transpiler::transpile(std::string code){
@@ -35,6 +125,8 @@ std::string Transpiler::transpile(std::string code){
     std::stringstream mainCode;
 
     bool insideFunction = false;
+
+    std::string currentFunction;
 
     std::stringstream ss(code);
     std::string line;
@@ -51,15 +143,23 @@ std::string Transpiler::transpile(std::string code){
             auto nameStart = 3;
             auto paren = line.find("(");
 
-            std::string fname = line.substr(nameStart,paren-nameStart);
+            currentFunction = trim(line.substr(nameStart,paren-nameStart));
 
             auto close = line.find(")");
 
-            std::string args = line.substr(paren+1,close-paren-1);
+            std::string argText = line.substr(paren+1,close-paren-1);
+
+            std::vector<Arg> args = parseArgs(argText);
+
+            FunctionInfo fi;
+            fi.name = currentFunction;
+            fi.args = args;
+
+            functionsList.push_back(fi);
 
             std::string cArgs = buildArgs(args);
 
-            functions << "int " << fname << "(" << cArgs << "){\n";
+            functions << "int " << currentFunction << "(" << cArgs << "){\n";
 
             insideFunction = true;
 
@@ -93,10 +193,7 @@ std::string Transpiler::transpile(std::string code){
 
             std::string val = trim(line.substr(6));
 
-            if(insideFunction)
-                functions << "return " << val << ";\n";
-            else
-                mainCode << "return " << val << ";\n";
+            functions << "return " << val << ";\n";
 
             continue;
         }
@@ -110,6 +207,20 @@ std::string Transpiler::transpile(std::string code){
 
             std::string name = trim(line.substr(0,eq));
             std::string value = trim(line.substr(eq+1));
+
+            // detect function call
+            auto paren = value.find("(");
+
+            if(paren != std::string::npos){
+
+                auto close = value.find(")");
+
+                std::string fname = value.substr(0,paren);
+
+                std::string args = value.substr(paren+1,close-paren-1);
+
+                value = applyDefaultArgs(fname,args);
+            }
 
             mainCode << "int " << name << " = " << value << ";\n";
 
