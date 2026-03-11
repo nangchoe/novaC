@@ -27,6 +27,8 @@ enum TokenType
     TOKEN_LBRACKET,
     TOKEN_RBRACKET,
 
+    TOKEN_COLON,
+
     TOKEN_UNKNOWN
 
 };

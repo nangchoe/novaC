@@ -168,6 +168,27 @@ std::vector<Token> Lexer::tokenize(std::string code)
             continue;
         }
 
+        if (c == '{')
+        {
+            tokens.push_back({TOKEN_LBRACE, "{"});
+            i++;
+            continue;
+        }
+
+        if (c == '}')
+        {
+            tokens.push_back({TOKEN_RBRACE, "}"});
+            i++;
+            continue;
+        }
+
+        if (c == ':')
+        {
+            tokens.push_back({TOKEN_COLON, ":"});
+            i++;
+            continue;
+        }
+
         i++;
     }
 

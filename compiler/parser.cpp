@@ -102,15 +102,70 @@ Node *Parser::parseVariable()
 
     advance(); // let
 
-    Token nameToken = advance(); // variable name
+    Token nameToken = advance();
+    std::string name = nameToken.value;
 
-    Token eqToken = advance(); // =
+    advance(); // =
 
-    Token valueToken = advance(); // value
+    Token valueToken = advance();
 
+    // JSON
+    if (valueToken.value == "json")
+    {
+
+        advance(); // {
+
+        JsonNode *j = new JsonNode;
+
+        j->name = name;
+
+        while (peek().value != "}")
+        {
+
+            std::string key = advance().value;
+
+            advance(); // :
+
+            std::string value = advance().value;
+
+            j->keys.push_back(key);
+            j->values.push_back(value);
+
+            if (peek().value == ",")
+                advance();
+        }
+
+        advance(); // }
+
+        return j;
+    }
+
+    // ARRAY
+    if (valueToken.value == "[")
+    {
+
+        ArrayNode *arr = new ArrayNode;
+
+        arr->name = name;
+
+        while (peek().value != "]")
+        {
+
+            arr->values.push_back(advance().value);
+
+            if (peek().value == ",")
+                advance();
+        }
+
+        advance(); // ]
+
+        return arr;
+    }
+
+    // NORMAL VARIABLE
     VariableNode *v = new VariableNode;
 
-    v->name = nameToken.value;
+    v->name = name;
     v->value = valueToken.value;
 
     return v;

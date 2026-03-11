@@ -11,6 +11,8 @@ std::string Codegen::generate(std::vector<Node *> nodes)
     out << "#include \"runtime/io.h\"\n";
     out << "#include \"runtime/timer.h\"\n";
     out << "#include \"runtime/interrupt.h\"\n";
+    out << "#include <map>\n";
+    out << "#include <string>\n";
 
     out << "int main(){\n";
 
@@ -107,6 +109,25 @@ std::string Codegen::generate(std::vector<Node *> nodes)
             }
 
             out << "};\n";
+        }
+
+        if (auto j = dynamic_cast<JsonNode *>(node))
+        {
+
+            out << "std::map<std::string,int> "
+                << j->name
+                << ";\n";
+
+            for (int i = 0; i < j->keys.size(); i++)
+            {
+
+                out << j->name
+                    << "[\""
+                    << j->keys[i]
+                    << "\"]="
+                    << j->values[i]
+                    << ";\n";
+            }
         }
     }
 

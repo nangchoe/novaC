@@ -88,3 +88,12 @@ struct ArrayNode : Node{
     std::vector<std::string> values;
 
 };
+
+struct JsonNode : Node{
+
+    std::string name;
+
+    std::vector<std::string> keys;
+    std::vector<std::string> values;
+
+};
