@@ -5,7 +5,9 @@ project(novac)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(novac
+
 compiler/main.cpp
-compiler/transpiler.cpp
-compiler/utils.cpp
+compiler/lexer.cpp
+compiler/parser.cpp
+
 )

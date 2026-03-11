@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
-#include "transpiler.h"
+
+#include "lexer.h"
+#include "parser.h"
 
 int main(int argc,char** argv){
 
@@ -10,7 +12,6 @@ int main(int argc,char** argv){
         std::cout<<"usage: novac file.nc\n";
 
         return 0;
-
     }
 
     std::ifstream f(argv[1]);
@@ -20,18 +21,15 @@ int main(int argc,char** argv){
         std::istreambuf_iterator<char>()
     );
 
-    Transpiler t;
+    Lexer lexer;
 
-    std::string c_code = t.transpile(code);
+    auto tokens = lexer.tokenize(code);
 
-    std::ofstream out("output.c");
+    Parser parser;
 
-    out << c_code;
+    auto ast = parser.parse(tokens);
 
-    out.close();
-
-    system("gcc output.c -o output");
-
-    std::cout<<"Build success\n";
+    std::cout<<"Tokens: "<<tokens.size()<<std::endl;
+    std::cout<<"AST nodes: "<<ast.size()<<std::endl;
 
 }
