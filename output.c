@@ -1,6 +1,8 @@
 #include <stdio.h>
 int main(){
 int x = 10;
-printf("%d\n",x);
+int y = 20;
+int z = x + y;
+printf("%d\n",z);
 return 0;
 }

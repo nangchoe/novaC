@@ -6,36 +6,38 @@ std::vector<Node*> Parser::parse(std::vector<Token> tokens){
 
     for(int i=0;i<tokens.size();i++){
 
-        // let x = 10
+        // let
         if(tokens[i].type == TOKEN_LET){
 
             VariableNode* v = new VariableNode;
 
             v->name = tokens[i+1].value;
 
-            v->value = tokens[i+3].value;
+            std::string expr = tokens[i+3].value;
+
+            if(i+5 < tokens.size() &&
+               (tokens[i+4].type == TOKEN_PLUS ||
+                tokens[i+4].type == TOKEN_MINUS ||
+                tokens[i+4].type == TOKEN_STAR ||
+                tokens[i+4].type == TOKEN_SLASH)){
+
+                expr += " " + tokens[i+4].value + " " + tokens[i+5].value;
+            }
+
+            v->value = expr;
 
             nodes.push_back(v);
         }
 
-        // io.print(x)
-        if(tokens[i].value == "io.print"){
+        // io.print
+        if(tokens[i].type == TOKEN_IDENTIFIER &&
+           tokens[i].value == "io.print"){
 
             PrintNode* p = new PrintNode;
 
             p->value = tokens[i+2].value;
 
             nodes.push_back(p);
-        }
-
-        // if x > 10
-        if(tokens[i].value == "if"){
-
-            IfNode* n = new IfNode;
-
-            n->condition = tokens[i+1].value;
-
-            nodes.push_back(n);
         }
 
     }

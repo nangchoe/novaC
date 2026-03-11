@@ -16,6 +16,7 @@ std::vector<Token> Lexer::tokenize(std::string code){
             continue;
         }
 
+        // identifier / keyword
         if(isalpha(c)){
 
             std::string word;
@@ -29,87 +30,41 @@ std::vector<Token> Lexer::tokenize(std::string code){
 
             if(word == "fn")
                 tokens.push_back({TOKEN_FN,word});
-
             else if(word == "let")
                 tokens.push_back({TOKEN_LET,word});
-
             else if(word == "return")
                 tokens.push_back({TOKEN_RETURN,word});
-
             else
                 tokens.push_back({TOKEN_IDENTIFIER,word});
 
             continue;
         }
 
+        // number
         if(isdigit(c)){
 
             std::string num;
 
             while(i < code.size() && isdigit(code[i])){
-
                 num += code[i];
                 i++;
             }
 
             tokens.push_back({TOKEN_NUMBER,num});
-
             continue;
         }
 
-        if(c == '('){
-            tokens.push_back({TOKEN_LPAREN,"("});
-            i++;
-            continue;
-        }
+        if(c=='('){ tokens.push_back({TOKEN_LPAREN,"("}); i++; continue; }
+        if(c==')'){ tokens.push_back({TOKEN_RPAREN,")"}); i++; continue; }
+        if(c=='{'){ tokens.push_back({TOKEN_LBRACE,"{"}); i++; continue; }
+        if(c=='}'){ tokens.push_back({TOKEN_RBRACE,"}"}); i++; continue; }
 
-        if(c == ')'){
-            tokens.push_back({TOKEN_RPAREN,")"});
-            i++;
-            continue;
-        }
+        if(c=='+'){ tokens.push_back({TOKEN_PLUS,"+"}); i++; continue; }
+        if(c=='-'){ tokens.push_back({TOKEN_MINUS,"-"}); i++; continue; }
+        if(c=='*'){ tokens.push_back({TOKEN_STAR,"*"}); i++; continue; }
+        if(c=='/'){ tokens.push_back({TOKEN_SLASH,"/"}); i++; continue; }
 
-        if(c == '{'){
-            tokens.push_back({TOKEN_LBRACE,"{"});
-            i++;
-            continue;
-        }
-
-        if(c == '}'){
-            tokens.push_back({TOKEN_RBRACE,"}"});
-            i++;
-            continue;
-        }
-
-        if(c == '+'){
-            tokens.push_back({TOKEN_PLUS,"+"});
-            i++;
-            continue;
-        }
-
-        if(c == '-'){
-            tokens.push_back({TOKEN_MINUS,"-"});
-            i++;
-            continue;
-        }
-
-        if(c == '*'){
-            tokens.push_back({TOKEN_STAR,"*"});
-            i++;
-            continue;
-        }
-
-        if(c == '/'){
-            tokens.push_back({TOKEN_SLASH,"/"});
-            i++;
-            continue;
-        }
-
-        if(c == '='){
-            tokens.push_back({TOKEN_EQUAL,"="});
-            i++;
-            continue;
-        }
+        if(c=='='){ tokens.push_back({TOKEN_EQUAL,"="}); i++; continue; }
 
         i++;
     }

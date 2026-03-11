@@ -1,7 +1,10 @@
 fn main(){
 
     let x = 10
+    let y = 20
 
-    io.print(x)
+    let z = x + y
+
+    io.print(z)
 
 }

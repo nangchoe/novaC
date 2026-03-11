@@ -1,9 +1,16 @@
 #pragma once
 #include <string>
+#include <vector>
 
 struct Node{
 
     virtual ~Node(){}
+
+};
+
+struct ProgramNode : Node{
+
+    std::vector<Node*> statements;
 
 };
 
@@ -23,5 +30,13 @@ struct PrintNode : Node{
 struct IfNode : Node{
 
     std::string condition;
+
+};
+
+struct BinaryExprNode : Node{
+
+    std::string left;
+    std::string op;
+    std::string right;
 
 };

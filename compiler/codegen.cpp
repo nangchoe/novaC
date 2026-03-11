@@ -25,12 +25,6 @@ std::string Codegen::generate(std::vector<Node*> ast){
 
         }
 
-        if(auto i = dynamic_cast<IfNode*>(node)){
-
-            out << "if(" << i->condition << "){ }\n";
-
-        }
-
     }
 
     out << "return 0;\n";

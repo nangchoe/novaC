@@ -10,13 +10,27 @@ void build(std::string file){
 
     std::ifstream f(file);
 
+    if(!f){
+        std::cout << "Cannot open file\n";
+        return;
+    }
+
+    std::cout << "Reading file: " << file << std::endl;
+
     std::string code(
         (std::istreambuf_iterator<char>(f)),
         std::istreambuf_iterator<char>()
     );
 
+    std::cout << "SOURCE:\n";
+    std::cout << code << std::endl;
+
     Lexer lexer;
     auto tokens = lexer.tokenize(code);
+
+    for(auto &t : tokens){
+        std::cout << "TOKEN: " << t.value << std::endl;
+    }
 
     Parser parser;
     auto ast = parser.parse(tokens);
