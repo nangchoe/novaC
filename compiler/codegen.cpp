@@ -67,12 +67,46 @@ std::string Codegen::generate(std::vector<Node *> nodes)
                 << "\");\n";
         }
 
-        if (auto p = dynamic_cast<ServerPostNode *>(node))
+        if (auto p = dynamic_cast<PrintNode *>(node))
         {
 
-            out << "Server::post(\""
-                << p->route
-                << "\");\n";
+            out << "std::cout << "
+                << p->value
+                << " << std::endl;\n";
+        }
+
+        if (auto v = dynamic_cast<VariableNode *>(node))
+        {
+
+            out << "auto "
+                << v->name
+                << " = ";
+
+            if (v->value.size() > 0 && !isdigit(v->value[0]))
+                out << "\"" << v->value << "\"";
+            else
+                out << v->value;
+
+            out << ";\n";
+        }
+
+        if (auto a = dynamic_cast<ArrayNode *>(node))
+        {
+
+            out << "int "
+                << a->name
+                << "[] = {";
+
+            for (int i = 0; i < a->values.size(); i++)
+            {
+
+                out << a->values[i];
+
+                if (i < a->values.size() - 1)
+                    out << ",";
+            }
+
+            out << "};\n";
         }
     }
 

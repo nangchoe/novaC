@@ -24,10 +24,10 @@ bool build(std::string file)
     Lexer lexer;
     auto tokens = lexer.tokenize(code);
 
-    // for (auto &t : tokens)
-    // {
-    //     std::cout << "TOKEN: " << t.value << "\n";
-    // }
+    for (auto &t : tokens)
+    {
+        std::cout << "TOKEN: " << t.value << "\n";
+    }
     
 
     Parser parser;

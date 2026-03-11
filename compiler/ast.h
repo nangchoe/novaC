@@ -80,3 +80,11 @@ struct ServerPostNode : Node{
     std::string route;
 
 };
+
+struct ArrayNode : Node{
+
+    std::string name;
+
+    std::vector<std::string> values;
+
+};

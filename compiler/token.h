@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
 
-enum TokenType{
+enum TokenType
+{
 
     TOKEN_FN,
     TOKEN_LET,
@@ -23,14 +24,16 @@ enum TokenType{
     TOKEN_MINUS,
     TOKEN_STAR,
     TOKEN_SLASH,
+    TOKEN_LBRACKET,
+    TOKEN_RBRACKET,
 
     TOKEN_UNKNOWN
 
 };
 
-struct Token{
+struct Token
+{
 
     TokenType type;
     std::string value;
-
 };

@@ -102,13 +102,16 @@ Node *Parser::parseVariable()
 
     advance(); // let
 
+    Token nameToken = advance(); // variable name
+
+    Token eqToken = advance(); // =
+
+    Token valueToken = advance(); // value
+
     VariableNode *v = new VariableNode;
 
-    v->name = advance().value;
-
-    advance(); // =
-
-    v->value = advance().value;
+    v->name = nameToken.value;
+    v->value = valueToken.value;
 
     return v;
 }

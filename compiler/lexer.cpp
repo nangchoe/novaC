@@ -129,7 +129,6 @@ std::vector<Token> Lexer::tokenize(std::string code)
 
             while (i < code.size() && code[i] != '"')
             {
-
                 str += code[i];
                 i++;
             }
@@ -138,6 +137,34 @@ std::vector<Token> Lexer::tokenize(std::string code)
 
             tokens.push_back({TOKEN_STRING, str});
 
+            continue;
+        }
+
+        if (c == '=')
+        {
+            tokens.push_back({TOKEN_EQUAL, "="});
+            i++;
+            continue;
+        }
+
+        if (c == '[')
+        {
+            tokens.push_back({TOKEN_LBRACKET, "["});
+            i++;
+            continue;
+        }
+
+        if (c == ']')
+        {
+            tokens.push_back({TOKEN_RBRACKET, "]"});
+            i++;
+            continue;
+        }
+
+        if (c == ',')
+        {
+            tokens.push_back({TOKEN_COMMA, ","});
+            i++;
             continue;
         }
 
