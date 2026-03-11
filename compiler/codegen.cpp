@@ -56,6 +56,14 @@ std::string Codegen::generate(std::vector<Node *> ast)
 
             out << "while(1){ }\n";
         }
+
+        if (auto s = dynamic_cast<StringNode *>(node))
+        {
+
+            out << "printf(\"%s\\n\",\""
+                << s->value
+                << "\");\n";
+        }
     }
 
     out << "return 0;\n";

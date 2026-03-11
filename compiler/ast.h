@@ -70,3 +70,9 @@ struct IfNode : Node{
 struct LoopNode : Node{
 
 };
+
+struct StringNode : Node{
+
+    std::string value;
+
+};
